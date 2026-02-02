@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twino Board Games | Spēļu Vakari</title>
+
+    <!-- Fonts with Latin Extended support for Latvian -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Twino Brand Colors */
+            --twino-blue: #2E50B6;
+            --twino-blue-dark: #1e2f6d;
+            --twino-blue-light: #E7F6FC;
+            --twino-navy: #1F2539;
+            --white: #FFFFFF;
+            --off-white: #FAFAFA;
+            --gray-light: #F5F7FA;
+            --gray: #6B7280;
+            --gray-dark: #222222;
+            --accent-green: #10B981;
+            --accent-amber: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--off-white);
+            color: var(--gray-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Subtle gradient overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.02;
+            background: radial-gradient(ellipse at top, var(--twino-blue-light), transparent 70%);
+            z-index: -1;
+        }
+
+        .interactive { cursor: pointer; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, var(--off-white) 60%, transparent);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--gray-dark);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--twino-blue), var(--twino-blue-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--white);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(46, 80, 182, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--twino-blue-light);
+            color: var(--twino-blue);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--twino-blue-light);
+            color: var(--twino-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: fadeSlideDown 0.8s ease-out;
+        }
+
+        .hero-badge::before { content: '🎲'; }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 300;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            animation: fadeSlideUp 0.8s ease-out 0.1s both;
+            color: var(--twino-navy);
+        }
+
+        .hero-title strong {
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--twino-blue), var(--twino-blue-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--gray);
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+            animation: fadeSlideUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--twino-blue), var(--twino-blue-dark));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            animation: fadeSlideUp 0.8s ease-out 0.3s both;
+            border: none;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(46, 80, 182, 0.35);
+        }
+
+        .hero-cta svg { transition: transform 0.3s ease; }
+        .hero-cta:hover svg { transform: translateX(4px); }
+
+        /* Floating pieces */
+        .floating-pieces {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .piece {
+            position: absolute;
+            opacity: 0.08;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .piece:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+        .piece:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+        .piece:nth-child(3) { bottom: 30%; left: 8%; animation-delay: 2s; }
+        .piece:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; }
+        .piece:nth-child(5) { top: 50%; left: 5%; animation-delay: 0.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Events Section */
+        .events {
+            padding: 4rem 2rem 6rem;
+            background: var(--gray-light);
+            position: relative;
+        }
+
+        .events::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, var(--off-white), var(--gray-light));
+        }
+
+        .section-header {
+            max-width: 1000px;
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--twino-blue);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--twino-navy);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .event-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(46, 80, 182, 0.08);
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--twino-blue);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(46, 80, 182, 0.12);
+        }
+
+        .event-card:hover::before { transform: scaleY(1); }
+
+        .event-card.featured {
+            background: linear-gradient(135deg, var(--twino-blue) 0%, var(--twino-blue-dark) 100%);
+            color: var(--white);
+            border: none;
+        }
+
+        .event-card.featured::before {
+            background: var(--accent-amber);
+            transform: scaleY(1);
+        }
+
+        .event-date {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-day {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--twino-blue);
+        }
+
+        .event-card.featured .event-day { color: var(--accent-amber); }
+
+        .event-month {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .event-card.featured .event-month { color: rgba(255, 255, 255, 0.7); }
+
+        .event-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-details {
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-card.featured .event-details { color: rgba(255, 255, 255, 0.8); }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .event-tag {
+            display: inline-block;
+            background: var(--twino-blue-light);
+            color: var(--twino-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .event-card.featured .event-tag {
+            background: var(--accent-amber);
+            color: var(--twino-navy);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--twino-navy) 0%, var(--twino-blue-dark) 100%);
+            color: var(--white);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item { padding: 1rem; }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-amber);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Join Section */
+        .join {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            background: var(--off-white);
+        }
+
+        .join-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .join-emoji {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .join-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            color: var(--twino-navy);
+        }
+
+        .join-text {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .join-form {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .join-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 100px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--gray-dark);
+            transition: all 0.2s ease;
+        }
+
+        .join-input:focus {
+            outline: none;
+            border-color: var(--twino-blue);
+            box-shadow: 0 0 0 4px rgba(46, 80, 182, 0.15);
+        }
+
+        .join-input::placeholder {
+            color: var(--gray);
+            opacity: 0.6;
+        }
+
+        .join-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--twino-blue), var(--twino-blue-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 100px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 80, 182, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--gray-light);
+            background: var(--off-white);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .footer-heart { color: var(--twino-blue); }
+
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeSlideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 1rem; }
+            .hero { padding: 5rem 1.5rem 3rem; }
+            .events, .join { padding: 3rem 1.5rem; }
+            .events-grid { grid-template-columns: 1fr; }
+            .join-form { flex-direction: column; }
+            .join-input, .join-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo interactive">
+            <div class="logo-icon">♟</div>
+            <span class="logo-text">Twino Board Games</span>
+        </a>
+        <a href="#events" class="nav-link interactive">Pasākumi</a>
+    </header>
+
+    <section class="hero">
+        <div class="floating-pieces">
+            <svg class="piece" width="60" height="60" viewBox="0 0 60 60">
+                <path fill="#2E50B6" d="M30 5C25 5 21 12 21 18C21 22 23 25 26 27L22 50H38L34 27C37 25 39 22 39 18C39 12 35 5 30 5Z"/>
+            </svg>
+            <svg class="piece" width="50" height="50" viewBox="0 0 24 24">
+                <rect fill="#1e2f6d" x="3" y="3" width="18" height="18" rx="3" transform="rotate(15 12 12)"/>
+                <circle fill="#FAFAFA" cx="8" cy="8" r="1.5"/>
+                <circle fill="#FAFAFA" cx="16" cy="16" r="1.5"/>
+                <circle fill="#FAFAFA" cx="12" cy="12" r="1.5"/>
+            </svg>
+            <svg class="piece" width="55" height="55" viewBox="0 0 60 60">
+                <path fill="#2E50B6" d="M30 5C25 5 21 12 21 18C21 22 23 25 26 27L22 50H38L34 27C37 25 39 22 39 18C39 12 35 5 30 5Z"/>
+            </svg>
+            <svg class="piece" width="45" height="45" viewBox="0 0 24 24">
+                <rect fill="#1e2f6d" x="3" y="3" width="18" height="18" rx="3" transform="rotate(-10 12 12)"/>
+                <circle fill="#FAFAFA" cx="7" cy="7" r="1.5"/>
+                <circle fill="#FAFAFA" cx="17" cy="7" r="1.5"/>
+                <circle fill="#FAFAFA" cx="7" cy="17" r="1.5"/>
+                <circle fill="#FAFAFA" cx="17" cy="17" r="1.5"/>
+            </svg>
+            <svg class="piece" width="40" height="40" viewBox="0 0 60 60">
+                <path fill="#2E50B6" d="M30 5C25 5 21 12 21 18C21 22 23 25 26 27L22 50H38L34 27C37 25 39 22 39 18C39 12 35 5 30 5Z"/>
+            </svg>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-badge">Katru mēnesi jaunas spēles</span>
+            <h1 class="hero-title">Nāc spēlēt<br><strong>galda spēles</strong><br>ar kolēģiem</h1>
+            <p class="hero-subtitle">Aizmirsti par darbu, satiec jaunus cilvēkus, un izbaudi mājīgu spēļu vakaru Twino birojā.</p>
+            <a href="#join" class="hero-cta interactive">
+                Piesakies spēļu vakaram
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <section class="events" id="events">
+        <div class="section-header">
+            <p class="section-label">Kalendārs</p>
+            <h2 class="section-title">Nākamie spēļu vakari</h2>
+        </div>
+
+        <div class="events-grid">
+            <article class="event-card featured interactive">
+                <div class="event-date">
+                    <span class="event-day">14</span>
+                    <span class="event-month">Februāris</span>
+                </div>
+                <h3 class="event-title">Valentīna Spēļu Vakars</h3>
+                <div class="event-details">
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        6. stāvs, Chill zona
+                    </span>
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        18:00 - 21:00
+                    </span>
+                </div>
+                <span class="event-tag">Nākamais!</span>
+            </article>
+
+            <article class="event-card interactive">
+                <div class="event-date">
+                    <span class="event-day">14</span>
+                    <span class="event-month">Marts</span>
+                </div>
+                <h3 class="event-title">Stratēģiju Vakars</h3>
+                <div class="event-details">
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        6. stāvs, Chill zona
+                    </span>
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        18:00 - 21:00
+                    </span>
+                </div>
+                <span class="event-tag">Catan, Ticket to Ride</span>
+            </article>
+
+            <article class="event-card interactive">
+                <div class="event-date">
+                    <span class="event-day">11</span>
+                    <span class="event-month">Aprīlis</span>
+                </div>
+                <h3 class="event-title">Party Games Vakars</h3>
+                <div class="event-details">
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        6. stāvs, Chill zona
+                    </span>
+                    <span class="event-detail">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        18:00 - 21:00
+                    </span>
+                </div>
+                <span class="event-tag">Codenames, Wavelength</span>
+            </article>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Vakari gadā</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Spēles</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Dalībnieki</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Smiekli</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="join" id="join">
+        <div class="join-content">
+            <span class="join-emoji">🎯</span>
+            <h2 class="join-title">Gribi pievienoties?</h2>
+            <p class="join-text">Atstāj savu e-pastu un mēs tev atgādināsim par nākamo spēļu vakaru. Nekāda spama, tikai paziņojumi par pasākumiem.</p>
+            <form class="join-form" onsubmit="handleSubmit(event)">
+                <input type="email" class="join-input" placeholder="tavs@twino.eu" required>
+                <button type="submit" class="join-btn interactive">Piesakies</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p class="footer-text">Veidots ar <span class="footer-heart">♥</span> Twino komandai · 2026</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const originalContent = form.innerHTML;
+            form.innerHTML = '<p style="color: var(--accent-green); font-weight: 500; padding: 1rem;">✓ Paldies! Mēs tev rakstīsim par nākamo spēļu vakaru.</p>';
+            setTimeout(() => { form.innerHTML = originalContent; }, 3000);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.event-card, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
